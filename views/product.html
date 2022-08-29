@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<body>
+		<style>
+			#container {
+				display: flex;
+				flex-wrap: wrap;
+			}
+
+			.flex-item {
+				width: 33.3%;
+				margin: 20px 0 50px 0;
+				background-color: aqua;
+			}
+		</style>
+		<div id="title"></div>
+		<div id="container">Loading Product</div>
+
+		<a href="./login">Go to login</a>
+
+		<script>
+			const container = document.getElementById('container');
+			const title = document.getElementById('title');
+			window.onload = function () {
+				const user = JSON.parse(localStorage.getItem('user'));
+				const { firstName, lastName } = user;
+				console.log(firstName, lastName);
+				title.innerHTML = `welcome to our store ${firstName} ${lastName}`;
+				fetch('/api/product')
+					.then((response) => response.json())
+					.then((data) => {
+						const product = data.products.map((product) => {
+							return `
+							<div class="flex-item">
+								<div>name: ${product.name}</div>
+								<div>price: ${product.price}</div>
+								<div>quantity: ${product.qantitity}</div>
+								<a href='/product/${product.id}'>View More</a>
+							</div>
+						`;
+						});
+
+						container.innerHTML = product.join('');
+					});
+			};
+		</script>
+	</body>
+</html>
